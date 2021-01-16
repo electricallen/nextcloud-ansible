@@ -1,0 +1,106 @@
+# Ansible Playbook for dockerized deployment of a NextCloud server
+#
+# Revision History
+# 2021-01-09 - ANM - Initial Creation
+#
+# Unfinished tasks:
+# - Optimize database performance 
+# - Add automated back up to another cloud service
+---
+- name: deploy and configure nextcloud
+  hosts: all
+  vars_files: defaults/main.yml
+  become: yes
+
+  tasks:
+  - name: install docker and dependencies
+    package:
+      name: "{{ item }}"
+      state: latest
+    loop:
+      - docker
+      - docker-compose
+      - apache2-utils
+  
+  - name: allow traffic on ports {{ httpport }} and {{ httpsport }}
+    ufw:
+     rule: allow
+     port: "{{ item }}"
+    loop:
+      - "{{ httpport | string }}"
+      - "{{ httpsport | string }}"
+
+  - name: ensure group "docker" exists
+    group:
+      name: docker
+      state: present
+
+  - name: add {{ username }} to docker group
+    user:
+      name: "{{ username }}"
+      groups: docker
+      append: yes
+
+  - name: enable docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    become: no
+
+  - name: create project directories
+    file:
+      path: ~/{{ item }}/
+      state: directory
+      owner: "{{ username }}"
+      group: docker
+      mode: '0770'
+    loop:
+      - "{{ nextclouddir }}"
+      - "{{ traefikdir }}"
+    become: no
+
+  - name: create traefik dashboard password
+    shell:
+      cmd: echo $(htpasswd -nb {{ traefikuser }} {{ traefikpw }}) | sed -e s/\\$/\\$\\$/g
+    become: no
+    no_log: truesu all
+    register: traefikcreds
+    when: traefikuser != ""
+    
+  - name: create docker-compose file
+    template:
+      src: templates/{{ item }}/docker-compose.yml
+      dest: ~/{{ item }}/docker-compose.yml
+      owner: "{{ username }}"
+      group: docker
+      mode: '0770'
+    loop:
+      - "{{ nextclouddir }}"
+      - "{{ traefikdir }}"
+    become: no
+
+  - name: start containers (may take a long time)
+    docker_compose: 
+      project_src: ~/{{ item }}/
+    loop:
+      - "{{ traefikdir }}"
+      - "{{ nextclouddir }}"
+    become: no
+
+  - wait_for:
+      path: ~/nextcloud/nextcloud/config/config.php
+    become: no
+
+  - name: set apache to force http redirect (fixes come client connections behind proxies)
+    lineinfile:
+      path: /home/{{ username }}/nextcloud/nextcloud/config/config.php
+      regexp: "^  'overwriteprotocol'"
+      line: "  'overwriteprotocol' => 'https',"
+      insertbefore: "  'htaccess.RewriteBase'"
+
+  - name: restart nextcloud
+    community.general.docker_compose:
+      project_src: ~/{{ nextclouddir }}
+      build: yes
+      restarted: yes

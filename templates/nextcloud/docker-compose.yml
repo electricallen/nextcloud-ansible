@@ -1,0 +1,50 @@
+version: "3.5"
+
+services:
+
+  db:
+    container_name: nextcloud-db
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --log-basename=mariadblog
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ mysqlrootpw }}
+      - MYSQL_PASSWORD={{ mysqlpw }}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER={{ mysqlusr }}
+    networks:
+      - nextcloud-internal
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud:latest
+    restart: always
+    volumes:
+      - ./nextcloud:/var/www/html
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=nextcloud-external
+      - traefik.http.routers.nextcloud.rule=Host(`{{ nextcloudhost }}.{{ domain }}`)
+      - traefik.http.routers.nextcloud.entrypoints=websecure
+      - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
+    environment:
+      - MYSQL_PASSWORD={{ mysqlpw }}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER={{ mysqlusr }}
+      - MYSQL_HOST=nextcloud-db
+      - NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloudhost }}.{{ domain }}
+    networks:
+      - nextcloud-external
+      - nextcloud-internal
+
+volumes:
+  db:
+
+networks:
+  nextcloud-external:
+    external: 
+      name: nextcloud-external
+  nextcloud-internal:
+      internal: true 

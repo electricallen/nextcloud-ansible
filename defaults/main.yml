@@ -1,0 +1,64 @@
+# Edit these defaults to configure your deployment
+
+############################ TARGET NODE SETTINGS ############################
+
+# Hostname of target node
+# If not routeable by hostname use IP address
+hostname: targethostname
+# hostname: "192.168.1.2"
+
+# Username of target node
+username: targetuser
+
+# Sudo password of target node
+# If you prefer to leave this blank then comment out the following line in hosts.yml:
+#            ansible_become_pass: "{{ targetpw }}"
+# and run the playbook using 
+#            ansible-playbook main.yml -i hosts.yml --ask-become-pass
+targetpw: password
+
+# Domain services will be avaliable on
+domain: example.xyz
+
+############################### TRAEFIK SETTINGS ##############################
+
+# Hostname for traefik dashboard URL
+# Traefik dashboard will be avaliable at: 
+#     https://{{ traefikhost}}.{{ domain }}
+traefikhost: traefik
+
+# Project directory for docker-compose and volumes
+# Files stored at ~/{{ traefikdir }}
+traefikdir: traefik
+
+# External ports for nextcloud container
+# Change these ports if trafic will reach vm on a different port
+httpport: "80"
+httpsport: "443"
+
+# Email used for Let's Encrypt 
+email: yourname@example.com
+
+# Traefik dashboard credentials
+# Leave blank (double quotes) if you dont want a dashboard
+traefikuser: admin
+#traefikuser: ""
+# Password is plaintext (ansible will hash)
+traefikpw: admin
+
+######################### NEXTCLOUD/DATABASE SETTINGS #########################
+
+# Hostname for NextCloud Web URL
+# Nextcloud will be avaliable in browser and through apps at: 
+#     https://{{ nextcloudhost}}.{{ domain }}
+nextcloudhost: cloud
+
+# Project directory for docker-compose and volumes
+# Files stored at ~/{{ nextclouddir }}
+nextclouddir: nextcloud
+
+# MySQL database credentials
+# Passwords are plaintext
+mysqlrootpw: admin
+mysqlusr: nextcloud
+mysqlpw: admin
