@@ -13,15 +13,19 @@ Based on the docker-compose files from GitHub user [mynah22](https://github.com/
     ansible-galaxy collection install community.general
     ```
 3. Set up port forwarding/routing
+
     3.1 Router
+
         - Port forward http and https to the target node (typically :80 and :443)
         - Set up splt dns override to route nextcloud and traefik hostnames to your target node
 
     3.2 Domain registrar
-          Set up routing for your domain. I used an A+ record with wildcard (\*) for hostname
+
+        - Set up routing for your domain. I used an A+ record with wildcard (\*) for hostname
 
 4. Configure your settings in defaults/main.yml
 5. Ensure ssh keys are set up between ansible control and target nodes
+
     5.1 Run these commands from anisble control node
     ``` 
         sudo apt install open-ssh.server
@@ -30,7 +34,9 @@ Based on the docker-compose files from GitHub user [mynah22](https://github.com/
     ```
 6. `cd` to the directory with this README.md
 7. Run the ansible playbook from this directory with:
+        ```
         ansible-playbook main.yml -i hosts.yml
+        ```
 8. Once the playbook is done, check to see if your routing works by typing traefik.yourdomain.xyz into a browser
 9. It may take a few minutes for traefik to install an HTTPS cert from Let's Encrypt
 
