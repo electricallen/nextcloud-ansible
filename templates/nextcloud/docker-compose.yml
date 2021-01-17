@@ -29,12 +29,20 @@ services:
       - traefik.http.routers.nextcloud.rule=Host(`{{ nextcloudhost }}.{{ domain }}`)
       - traefik.http.routers.nextcloud.entrypoints=websecure
       - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.nextcloud.middlewares=nextcloud,nextcloud_redirect
+      - traefik.http.middlewares.nextcloud.headers.contentSecurityPolicy=frame-ancestors 'self' {{ domain }} *.{{ domain }}
+      - traefik.http.middlewares.nextcloud.headers.stsSeconds=155520011
+      - traefik.http.middlewares.nextcloud.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.nextcloud.headers.stsPreload=true
+      - traefik.http.middlewares.nextcloud_redirect.redirectregex.regex=/.well-known/(card|cal)dav
+      - traefik.http.middlewares.nextcloud_redirect.redirectregex.replacement=/remote.php/dav/
     environment:
       - MYSQL_PASSWORD={{ mysqlpw }}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER={{ mysqlusr }}
       - MYSQL_HOST=nextcloud-db
       - NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloudhost }}.{{ domain }}
+      - TRUSTED_PROXIES=172.18.0.0/16
     networks:
       - nextcloud-external
       - nextcloud-internal
