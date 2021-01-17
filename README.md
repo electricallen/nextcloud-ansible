@@ -16,13 +16,13 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 3. Set up port forwarding/routing
 
     3.1 Router
-
-        - Port forward http and https to the target node (typically :80 and :443)
-        - Set up splt dns override to route nextcloud and traefik hostnames to your target node
+        
+    - Port forward http and https to the target node (typically :80 and :443)
+    - Set up splt dns override to route nextcloud and traefik hostnames to your target node
 
     3.2 Domain registrar
 
-        - Set up routing for your domain. I used an A+ record with wildcard (\*) for hostname
+    - Set up routing for your domain. I used an A+ record with wildcard (*) for hostname
 
 4. Configure your settings in defaults/main.yml
 5. Ensure ssh keys are set up between ansible control and target nodes
