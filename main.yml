@@ -64,7 +64,7 @@
     shell:
       cmd: echo $(htpasswd -nb {{ traefikuser }} {{ traefikpw }}) | sed -e s/\\$/\\$\\$/g
     become: no
-    no_log: truesu all
+    no_log: true
     register: traefikcreds
     when: traefikuser != ""
     
