@@ -1,8 +1,5 @@
 # Ansible Playbook for dockerized deployment of a NextCloud server
 #
-# Revision History
-# 2021-01-09 - ANM - Initial Creation
-#
 # Unfinished tasks:
 # - Optimize database performance 
 # - Add automated back up to another cloud service
@@ -68,7 +65,7 @@
     register: traefikcreds
     when: traefikuser != ""
     
-  - name: create docker-compose file
+  - name: create docker-compose files
     template:
       src: templates/{{ item }}/docker-compose.yml
       dest: ~/{{ item }}/docker-compose.yml
@@ -88,7 +85,8 @@
       - "{{ nextclouddir }}"
     become: no
 
-  - wait_for:
+  - name: wait for nextcloud setup (may take a few minutes)
+    wait_for:
       path: ~/nextcloud/nextcloud/config/config.php
     become: no
 
@@ -98,9 +96,11 @@
       regexp: "^  'overwriteprotocol'"
       line: "  'overwriteprotocol' => 'https',"
       insertbefore: "  'htaccess.RewriteBase'"
+    register: https_redirection
 
   - name: restart nextcloud
-    community.general.docker_compose:
+    docker_compose:
       project_src: ~/{{ nextclouddir }}
       build: yes
       restarted: yes
+    when: https_redirection.changed
