@@ -24,7 +24,7 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 
     - Set up routing for your domain. I used an A+ record with wildcard (*) for hostname
 
-4. Configure your settings in defaults/main.yml
+4. Configure your settings in `defaults/main.yml` within the directory with this README.md
 5. Ensure ssh keys are set up between ansible control and target nodes
 
     5.1 Run these commands from anisble control node
