@@ -92,7 +92,7 @@
       path: ~/nextcloud/nextcloud/config/config.php
     become: no
 
-  - name: set apache to force http redirect (fixes come client connections behind proxies)
+  - name: set apache to force http redirect (fixes some client connections behind proxies)
     lineinfile:
       path: /home/{{ username }}/nextcloud/nextcloud/config/config.php
       regexp: "^  'overwriteprotocol'"
