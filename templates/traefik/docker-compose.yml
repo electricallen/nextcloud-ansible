@@ -6,7 +6,9 @@ services:
     image: traefik:latest
     container_name: traefik
     command:
+{% if traefikuser != "" %}
       - --api.dashboard=true
+{% endif %}
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:{{ httpport }}
