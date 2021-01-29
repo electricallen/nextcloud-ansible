@@ -1,8 +1,4 @@
 # Ansible Playbook for dockerized deployment of a NextCloud server
-#
-# Unfinished tasks:
-# - Optimize database performance 
-# - Add automated back up to another cloud service
 ---
 - name: deploy and configure nextcloud
   hosts: all
