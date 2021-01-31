@@ -31,7 +31,7 @@ traefikhost: traefik
 # Files stored at ~/{{ traefikdir }}
 traefikdir: traefik
 
-# External ports for nextcloud container
+# External ports for traefik container
 # Change these ports if trafic will reach vm on a different port
 httpport: "80"
 httpsport: "443"
