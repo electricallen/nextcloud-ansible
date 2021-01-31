@@ -6,25 +6,25 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 
 ## How to Use
 
-1. Install Ubuntu 20.04 and OpenSSH on target node
-2. Install Ansible on control node (must be linux, I use WSL + VSCode on a windows machine)
+1. Configure your settings in `defaults/main.yml` within the directory with this README.md
+2. Install Ubuntu 20.04 and OpenSSH on target node
+3. Install Ansible on control node (must be linux, I use WSL + VSCode on a windows machine)
     ```
     sudo apt update
     sudo apt install ansible
     ansible-galaxy collection install community.general
     ```
-3. Set up port forwarding/routing
+4. Set up port forwarding/routing
 
-    3.1 Router
+    4.1 Router
         
     - Port forward http and https to the target node (typically :80 and :443)
     - Set up split dns override to route nextcloud and traefik hostnames to your target node
 
-    3.2 Domain registrar
+    4.2 Domain registrar
 
     - Set up routing for your domain. I used an A+ record with wildcard (*) for hostname
 
-4. Configure your settings in `defaults/main.yml` within the directory with this README.md
 5. Ensure ssh keys are set up between ansible control and target nodes
 
     5.1 Run these commands from anisble control node
