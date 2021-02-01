@@ -29,7 +29,7 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 
     5.1 Run these commands from anisble control node
     ``` 
-        sudo apt install open-ssh.server
+        sudo apt install openssh.server
         ssh-keygen
         ssh-copy-id <user>@<target_node_ip_or_hostname>
     ```
