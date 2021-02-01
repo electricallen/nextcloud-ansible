@@ -39,7 +39,6 @@
       name: docker
       state: started
       enabled: yes
-    become: no
 
   - name: create project directories
     file:
