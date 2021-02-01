@@ -1,6 +1,6 @@
 # NextCloud and Traefik Containers in Ansible
 
-An ansible playbook to install and configure NextCloud and a Traefik revserse proxy using Docker conatiners
+An ansible playbook to install and configure NextCloud and a Traefik revserse proxy using Docker conatiners on an Ubuntu host
 
 Based on the `docker-compose` files from GitHub user [mynah22](https://github.com/mynah22/nextcloud-docker)
 
