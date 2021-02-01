@@ -6,14 +6,35 @@
   become: yes
 
   tasks:
-  - name: install docker and dependencies
+  - name: install docker and dependencies (support for Ubuntu 20.04+ revisions)
     package:
       name: "{{ item }}"
       state: latest
     loop:
       - docker
-      - docker-compose
       - apache2-utils
+      - docker-compose
+    when: ansible_distribution_version is version('20.04', '>=')
+  
+  - name: Update apt repo (support for previous versions)
+    apt:
+      update-cache: yes
+    when: ansible_distribution_version is version('20.04', '<')
+
+  - name: install docker and pip (support for previous versions)
+    package:
+      name: "{{ item }}"
+      state: latest
+    loop: 
+      - docker.io
+      - python3
+      - python3-pip
+    when: ansible_distribution_version is version('20.04', '<')
+
+  - name: install docker-compose using pip (support for previous versions)
+    pip:
+      name: docker-compose
+    when: ansible_distribution_version is version('20.04', '<')
   
   - name: allow traffic on ports {{ httpport }} and {{ httpsport }}
     ufw:
@@ -33,13 +54,22 @@
       name: "{{ username }}"
       groups: docker
       append: yes
+    register: docker_group
+    
+  - name: restart for group changes to function
+    reboot:
+    when: docker_group.changed
+
+  - name: wait for reboot to complete
+    wait_for_connection:
+    when: docker_group.changed
 
   - name: enable docker service
     service:
       name: docker
       state: started
       enabled: yes
-
+      
   - name: create project directories
     file:
       path: ~/{{ item }}/
