@@ -27,6 +27,7 @@
       state: latest
     loop: 
       - docker.io
+      - apache2-utils
       - python3
       - python3-pip
     when: ansible_distribution_version is version('20.04', '<')
