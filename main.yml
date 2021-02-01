@@ -110,7 +110,7 @@
       - "{{ nextclouddir }}"
     become: no
 
-  - name: wait for nextcloud setup (may take a few minutes)
+  - name: Go to {{ nextcloudhost }}.{{ domain }} and set up your admin account. Waiting for nextcloud setup (5 min max)
     wait_for:
       path: ~/nextcloud/nextcloud/config/config.php
     become: no
