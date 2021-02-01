@@ -13,7 +13,7 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 ## How to Use
 
 1. Configure your settings in `defaults/main.yml` within the directory with this README.md
-2. Install Ubuntu 20.04 (18.04 also supported) and OpenSSH on target node
+2. Install Ubuntu 20.04 and OpenSSH on target node (18.04 is also tested and supported - newer/older versions may or may not work)
 3. Install Ansible on control node
     ```
     sudo apt update
