@@ -8,7 +8,7 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
 * A server capable of running Ubuntu either as a VM or directly (16 GB storage, 1 GB RAM) - the Ansible target node
 * A domain name 
 * A router capable of port forwarding, DDNS, and split DNS override (I reccomend pfSense)
-* A computer to be used as an Ansible Control node. This must be linux, I use WSL on an windows 10 machine
+* A computer to be used as an Ansible Control node. This must be linux, I use WSL on a windows 10 machine
 
 ## How to Use
 
