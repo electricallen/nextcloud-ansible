@@ -18,7 +18,7 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
     ```
     sudo apt update
     sudo apt install ansible
-    ansible-galaxy collection install community.general
+    ansible-galaxy collection install -r requirements.yml
     ```
 4. Set up port forwarding/routing
 
