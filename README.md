@@ -4,11 +4,17 @@ An ansible playbook to install and configure NextCloud and a Traefik revserse pr
 
 Based on the `docker-compose` files from GitHub user [mynah22](https://github.com/mynah22/nextcloud-docker)
 
+## What you need
+* A server capable of running Ubuntu either as a VM or directly (16 GB storage, 1 GB RAM) - the Ansible target node
+* A domain name 
+* A router capable of port forwarding, DDNS, and split DNS override (I reccomend pfSense)
+* A computer to be used as an Ansible Control node. This must be linux, I Use WSL on an windows 10 machine
+
 ## How to Use
 
 1. Configure your settings in `defaults/main.yml` within the directory with this README.md
-2. Install Ubuntu 20.04 and OpenSSH on target node
-3. Install Ansible on control node (must be linux, I use WSL + VSCode on a windows machine)
+2. Install Ubuntu 20.04 (18.04 also supported) and OpenSSH on target node
+3. Install Ansible on control node
     ```
     sudo apt update
     sudo apt install ansible
