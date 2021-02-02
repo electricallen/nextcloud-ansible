@@ -2,39 +2,16 @@
 ---
 - name: deploy and configure nextcloud
   hosts: all
-  vars_files: defaults/main.yml
+  vars_files: ../defaults/main.yml
   become: yes
 
   tasks:
-  - name: install docker and dependencies (support for Ubuntu 20.04+ revisions)
-    package:
-      name: "{{ item }}"
-      state: latest
-    loop:
-      - docker
-      - apache2-utils
-      - docker-compose
+  - name: install docker and dependencies on newer versions (Ubuntu 20.04+)
+    include: install2004.yml
     when: ansible_distribution_version is version('20.04', '>=')
-  
-  - name: Update apt repo (support for previous versions)
-    apt:
-      update-cache: yes
-    when: ansible_distribution_version is version('20.04', '<')
 
-  - name: install docker and pip (support for previous versions)
-    package:
-      name: "{{ item }}"
-      state: latest
-    loop: 
-      - docker.io
-      - apache2-utils
-      - python3
-      - python3-pip
-    when: ansible_distribution_version is version('20.04', '<')
-
-  - name: install docker-compose using pip (support for previous versions)
-    pip:
-      name: docker-compose
+  - name: install docker and dependencies on older versions (Prior to Ubuntu 20.04)
+    include: install1804.yml
     when: ansible_distribution_version is version('20.04', '<')
   
   - name: allow traffic on ports {{ httpport }} and {{ httpsport }}
@@ -111,7 +88,7 @@
       - "{{ nextclouddir }}"
     become: no
 
-  - name: Go to {{ nextcloudhost }}.{{ domain }} and set up your admin account. Waiting for nextcloud setup (5 min max)
+  - name: Go to {{ nextcloudhost }}.{{ domain }} and set up your admin account. Waiting for nextcloud setup (5 min max)...
     wait_for:
       path: ~/nextcloud/nextcloud/config/config.php
     become: no

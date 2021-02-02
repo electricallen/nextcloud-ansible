@@ -38,11 +38,11 @@ Based on the `docker-compose` files from GitHub user [mynah22](https://github.co
     ```
     sudo apt update
     sudo apt install ansible
-    ansible-galaxy collection install -r requirements.yml
+    ansible-galaxy install -r requirements.yml
     ```
 7. Run the ansible playbook from this directory with:
         ```
-        ansible-playbook main.yml -i hosts.yml
+        ansible-playbook tasks/main.yml -i hosts.yml
         ```
 8. Towards the end of the playbook, you will be prompted to log into nextcloud and create an admin account to proceed
 

@@ -1,0 +1,9 @@
+  - name: install docker and dependencies on newer versions (Ubuntu 20.04+)
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update-cache: yes
+    loop:
+      - docker
+      - apache2-utils
+      - docker-compose
