@@ -56,8 +56,8 @@
       group: docker
       mode: '0770'
     loop:
-      - "{{ nextclouddir }}"
-      - "{{ traefikdir }}"
+      - nextcloud
+      - traefik
     become: no
 
   - name: create traefik dashboard password
@@ -70,22 +70,22 @@
     
   - name: create docker-compose files
     template:
-      src: templates/{{ item }}/docker-compose.yml
+      src: ../templates/{{ item }}/docker-compose.yml
       dest: ~/{{ item }}/docker-compose.yml
       owner: "{{ username }}"
       group: docker
       mode: '0770'
     loop:
-      - "{{ nextclouddir }}"
-      - "{{ traefikdir }}"
+      - nextcloud
+      - traefik
     become: no
 
   - name: start containers (may take a long time)
     docker_compose: 
       project_src: ~/{{ item }}/
     loop:
-      - "{{ traefikdir }}"
-      - "{{ nextclouddir }}"
+      - traefik
+      - nextcloud
     become: no
 
   - name: Go to {{ nextcloudhost }}.{{ domain }} and set up your admin account. Waiting for nextcloud setup (5 min max)...
@@ -103,7 +103,7 @@
 
   - name: restart nextcloud
     docker_compose:
-      project_src: ~/{{ nextclouddir }}
+      project_src: ~/nextcloud
       build: yes
       restarted: yes
     when: https_redirection.changed

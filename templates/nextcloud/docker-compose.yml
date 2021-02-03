@@ -17,6 +17,23 @@ services:
     networks:
       - nextcloud-internal
 
+  redis:
+    container_name: nextcloud-redis
+    image: redis:alpine
+    restart: always
+    networks:
+      - nextcloud-internal
+
+  cron:
+    container_name: nextcloud-cron
+    image: nextcloud:apache
+    restart: always
+    volumes:
+      - ./nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    networks:
+      - nextcloud-internal
+
   nextcloud:
     container_name: nextcloud
     image: nextcloud:latest
@@ -41,6 +58,7 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER={{ mysqlusr }}
       - MYSQL_HOST=nextcloud-db
+      - REDIS_HOST=nextcloud-redis
       - NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloudhost }}.{{ domain }}
       - TRUSTED_PROXIES=172.18.0.0/16
     networks:

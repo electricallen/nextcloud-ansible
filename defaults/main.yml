@@ -27,10 +27,6 @@ domain: example.xyz
 #     https://{{ traefikhost}}.{{ domain }}
 traefikhost: traefik
 
-# Project directory for docker-compose and volumes
-# Files stored at ~/{{ traefikdir }}
-traefikdir: traefik
-
 # External ports for traefik container
 # Change these ports if trafic will reach vm on a different port
 httpport: "80"
@@ -52,10 +48,6 @@ traefikpw: admin
 # Nextcloud will be avaliable in browser and through apps at: 
 #     https://{{ nextcloudhost}}.{{ domain }}
 nextcloudhost: cloud
-
-# Project directory for docker-compose and volumes
-# Files stored at ~/{{ nextclouddir }}
-nextclouddir: nextcloud
 
 # MySQL database credentials
 # Passwords are plaintext
