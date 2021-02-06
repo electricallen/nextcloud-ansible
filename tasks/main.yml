@@ -3,7 +3,6 @@
 - name: deploy and configure nextcloud
   hosts: all
   vars_files: ../defaults/main.yml
-  become: yes
 
   tasks:
   - name: install docker and dependencies on newer versions (Ubuntu 20.04+)
@@ -21,21 +20,25 @@
     loop:
       - "{{ httpport | string }}"
       - "{{ httpsport | string }}"
+    become: yes
 
   - name: ensure group "docker" exists
     group:
       name: docker
       state: present
+    become: yes
 
   - name: add {{ username }} to docker group
     user:
       name: "{{ username }}"
       groups: docker
       append: yes
+    become: yes
     register: docker_group
     
   - name: restart for group changes to function
     reboot:
+    become: yes
     when: docker_group.changed
 
   - name: wait for reboot to complete
@@ -47,6 +50,7 @@
       name: docker
       state: started
       enabled: yes
+    become: yes
       
   - name: create project directories
     file:
@@ -58,7 +62,6 @@
     loop:
       - nextcloud
       - traefik
-    become: no
 
   - name: set salted hash for traefik dashboard password
     set_fact:
@@ -75,7 +78,6 @@
     loop:
       - nextcloud
       - traefik
-    become: no
 
   - name: start containers (may take a long time)
     docker_compose: 
@@ -83,12 +85,10 @@
     loop:
       - traefik
       - nextcloud
-    become: no
 
-  - name: Go to {{ nextcloudhost }}.{{ domain }} and set up your admin account. Waiting for nextcloud setup (5 min max)...
+  - name: Waiting for nextcloud setup (5 min max)...
     wait_for:
       path: ~/nextcloud/nextcloud/config/config.php
-    become: no
 
   - name: set apache to force http redirect (fixes some client connections behind proxies)
     lineinfile:
@@ -96,6 +96,7 @@
       regexp: "^  'overwriteprotocol'"
       line: "  'overwriteprotocol' => 'https',"
       insertbefore: "  'htaccess.RewriteBase'"
+    become: yes
     register: https_redirection
 
   - name: restart nextcloud
@@ -103,5 +104,4 @@
       project_src: ~/nextcloud
       build: yes
       restarted: yes
-    become: no
     when: https_redirection.changed
