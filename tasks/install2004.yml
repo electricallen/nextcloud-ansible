@@ -7,3 +7,4 @@
       - docker
       - apache2-utils
       - docker-compose
+    become: yes

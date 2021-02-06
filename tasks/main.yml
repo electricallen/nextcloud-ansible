@@ -60,12 +60,9 @@
       - traefik
     become: no
 
-  - name: create traefik dashboard password
-    shell:
-      cmd: echo $(htpasswd -nb {{ traefikuser }} {{ traefikpw }}) | sed -e s/\\$/\\$\\$/g
-    become: no
-    no_log: true
-    register: traefikcreds
+  - name: set salted hash for traefik dashboard password
+    set_fact:
+      traefik_creds: "{{ traefikuser }}:{{ traefikpw | password_hash('md5', 65534 | random(seed=inventory_hostname | string)) | regex_replace('\\$', '$$') }}"
     when: traefikuser != ""
     
   - name: create docker-compose files
@@ -106,4 +103,5 @@
       project_src: ~/nextcloud
       build: yes
       restarted: yes
+    become: no
     when: https_redirection.changed
