@@ -38,6 +38,7 @@
     
   - name: reset ssh connection to allow group changes to affect {{ username }}
     meta: reset_connection
+    when: docker_group.changed
 
   - name: enable docker service
     service:
