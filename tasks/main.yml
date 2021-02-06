@@ -36,14 +36,8 @@
     become: yes
     register: docker_group
     
-  - name: restart for group changes to function
-    reboot:
-    become: yes
-    when: docker_group.changed
-
-  - name: wait for reboot to complete
-    wait_for_connection:
-    when: docker_group.changed
+  - name: reset ssh connection to allow group changes to affect {{ username }}
+    meta: reset_connection
 
   - name: enable docker service
     service:
