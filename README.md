@@ -1,3 +1,8 @@
+## NOTE: THIS PROJECT IS NOT LONGER BEING SUPPORTED
+Please use the [homelab-ansible](https://github.com/electricallen/homelab-ansible) repository instead. 
+It can be configured to only install nextcloud, and will continue receiving updates. 
+This project should still function, but will not receive updates.
+
 # NextCloud and Traefik Containers in Ansible
 
 An ansible playbook to install and configure NextCloud and a Traefik revserse proxy using Docker conatiners on an Ubuntu host
